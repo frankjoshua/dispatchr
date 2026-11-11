@@ -1,0 +1,54 @@
+/* The working loop along the bottom of the map (loop-bar.ts): each agent's status and short name, lined
+   up along the top whether or not the agent has badges under it; the selected agent marked. Fast
+   forward (») lights up with the count of agents waiting on you. An agent's × (on hover, or on the
+   selected one on a touch screen) takes it out of the loop. */
+
+.loopbar {
+  position: absolute; left: 50%; bottom: 12px; translate: -50% 0; z-index: 2;
+  display: flex; align-items: center; gap: 2px; max-width: calc(100% - 20px); padding: 3px;
+  background: var(--top-2); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--btn-sh);
+}
+.loopbar[hidden] { display: none; }
+.loopbar ol {
+  position: relative; list-style: none; margin: 0; padding: 0 0 3px; display: flex; align-items: stretch; gap: 2px;
+  min-width: 0; overflow-x: auto; overscroll-behavior-x: contain; touch-action: pan-x; user-select: none;
+  scrollbar-width: thin; scrollbar-color: var(--dim) transparent;
+}
+.loopbar ol::-webkit-scrollbar { height: 5px; }
+.loopbar ol::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 5px; }
+.loopbar ol:focus-visible { outline: 1px solid var(--cy); outline-offset: -1px; }
+.loop-empty { padding: 6px 10px; white-space: nowrap; color: var(--dim); font: 11px var(--sans); }
+.loop-step, .loop-go { border: 0; background: none; color: var(--txt); cursor: pointer; font: 600 11px var(--mono); }
+.loop-step { flex: none; width: 28px; height: 28px; border-radius: 50%; font-size: 16px; line-height: 1; color: var(--dim); }
+.loop-step:hover:not(:disabled), .loop-step:focus-visible { color: var(--cy); outline: none; }
+.loop-step:disabled { opacity: 0.35; cursor: default; }
+.loop-ff { width: auto; min-width: 28px; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; border-radius: 14px; }
+.loop-ff:not(:disabled) { color: var(--warn); }
+.loop-ff small { min-width: 1ch; font: 700 10px var(--mono); }
+.loop-agent {
+  position: relative; flex: none; display: grid; align-content: start; justify-items: start; gap: 3px; padding: 4px 10px;
+  border: 1px solid transparent; border-radius: 14px; cursor: pointer;
+}
+/* Keep close inside the clipped strip; touch chips reserve its space so it cannot cover the name. */
+.loop-forget {
+  position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; padding: 0; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 50%; background: var(--top-2); color: var(--dim); font: 700 11px/1 var(--mono);
+  cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.12s;
+}
+.loop-agent:hover .loop-forget, .loop-agent:focus-within .loop-forget { opacity: 1; pointer-events: auto; }
+.loop-forget:hover, .loop-forget:focus-visible { color: var(--bad); border-color: var(--bad); outline: none; }
+.loop-go { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 0; outline: none; text-align: left; }
+.loop-agent .sti { width: 12px; flex: none; }
+.loop-agent .nm { max-width: 140px; }
+.loop-agent .pills { display: flex; gap: 3px; padding-left: 18px; }
+.loop-agent button.badge { background: transparent; cursor: pointer; }
+.loop-agent:hover, .loop-agent:focus-within { border-color: var(--line); }
+.loop-agent.sel { border-color: var(--cy); background: var(--row-sel); }
+.loop-agent.sel .nm { color: var(--txt); font-weight: 700; }
+@media (pointer: coarse) {
+  .loop-step { width: 40px; height: 40px; }
+  .loop-ff { width: auto; min-width: 40px; }
+  .loop-agent { padding: 7px 34px 7px 12px; }
+  .loop-forget { width: 24px; height: 24px; font-size: 14px; }
+  .loop-agent.sel .loop-forget { opacity: 1; pointer-events: auto; }
+}

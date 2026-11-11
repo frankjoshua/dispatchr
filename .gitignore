@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.log
+
+# How to reach rostr, possibly with a token: never committed (.env.example is the template).
+.env
+.env.*
+!.env.example
+
+# Local tool output
+.herdr-web-ui/
+review-map.md

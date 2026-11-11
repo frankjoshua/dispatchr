@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05080f">
+<title>dispatchr</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body data-tab="map">
+<div id="app">
+  <header class="top">
+    <div class="logo"><span class="gem" aria-hidden="true"></span><b>DISPATCHR</b></div>
+    <div class="stats" aria-label="Totals">
+      <div class="stat spend" id="spend" hidden title="What the agents' current sessions have cost, live from the stream"></div>
+      <div class="counts" id="stats"></div>
+    </div>
+    <div class="search">
+      <button type="button" id="search-btn" class="settings-btn search-btn" aria-expanded="false" aria-controls="search-menu" aria-keyshortcuts="/ Control+k Meta+k" title="Search agents (/, Ctrl+K or Cmd+K)">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 10l4.5 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span>Search</span><kbd aria-hidden="true">Ctrl/⌘ K</kbd>
+      </button>
+      <div class="settings-menu search-menu" id="search-menu" role="dialog" aria-label="Find an agent" hidden>
+        <input type="search" id="search-q" aria-label="Find an agent" placeholder="Find an agent" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-controls="search-results" aria-describedby="search-help">
+        <p class="search-hint" id="search-help">Enter opens web UI. Select shows it on the map.</p>
+        <ul class="search-results" id="search-results" aria-label="Matching agents"></ul>
+      </div>
+    </div>
+    <div class="filter">
+      <button type="button" id="filter-btn" class="settings-btn filter-btn" aria-expanded="false" aria-controls="filter-menu" title="Filter by space or tag">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M1.5 2.5h13l-5 6v5l-3 1.5v-6.5z" fill="currentColor"/></svg><b id="filter-count"></b>
+      </button>
+      <div class="settings-menu filter-menu" id="filter-menu" role="dialog" aria-label="Filter" hidden></div>
+    </div>
+    <div class="settings">
+      <button type="button" id="settings-btn" class="settings-btn" aria-expanded="false" aria-controls="settings-menu" aria-label="Settings" title="Settings">⚙</button>
+      <div class="settings-menu" id="settings-menu" role="dialog" aria-label="Settings" hidden>
+        <h3>SETTINGS</h3>
+        <p class="who" id="who"></p>
+        <label class="theme"><span>Theme</span><select id="theme"></select></label>
+        <label><input type="checkbox" id="opt-map-details"><span>Pane ids on the map</span></label>
+        <label><input type="checkbox" id="opt-dim-quiet"><span>Dim agents that have been quiet longest</span></label>
+        <label><input type="checkbox" id="opt-pack-quiet"><span>Pack away agents quiet for over a week</span></label>
+        <label><input type="checkbox" id="opt-hide-sleepers"><span>Hide characters of agents asleep over an hour</span></label>
+        <label><input type="checkbox" id="opt-navigation-attention"><span>Navigation: only agents needing attention</span></label>
+        <button type="button" class="chip wide" id="open-badges">Badges…</button>
+      </div>
+    </div>
+    <div class="badges-dialog" id="badges-dialog" role="dialog" aria-label="Badges" hidden></div>
+    <div class="conn" id="conn" role="status"></div>
+  </header>
+
+  <aside class="left panel" aria-label="Computers and event log">
+    <button type="button" class="rail" data-fold="left" title="Expand ([)"><b>▸</b><span>COMPUTERS · EVENT LOG</span><i id="unseen"></i></button>
+    <section class="computers">
+      <h2><span>COMPUTERS</span><small id="nodes-count"></small><button type="button" class="fold" data-fold="left" title="Collapse ([)" aria-label="Collapse the computers and event log panel">◂</button></h2>
+      <div id="nodes"></div>
+    </section>
+    <section class="feed">
+      <h2><span>EVENT LOG</span><small>live · /v1/stream</small></h2>
+      <ol id="feed" aria-live="polite"></ol>
+    </section>
+  </aside>
+
+  <main class="map" id="map">
+    <div class="mapctl">
+      <button type="button" id="fit" title="Fit everything (F)">⤢ FIT</button>
+      <button type="button" id="legend" title="Characters, effort and activity legend" aria-haspopup="dialog" aria-controls="legend-dialog" aria-expanded="false">Legend</button>
+    </div>
+    <div class="filterbar" id="filterbar" hidden></div>
+    <nav class="loopbar" id="loopbar" aria-label="Working loop" hidden></nav>
+  </main>
+
+  <aside class="right panel" aria-label="Agents">
+    <button type="button" class="rail" data-fold="right" title="Expand (])"><b>◂</b><span>UNITS · SPEND · UPCOMING</span></button>
+    <h2>
+      <span class="views" role="tablist">
+        <button type="button" role="tab" data-view="units" aria-selected="true">UNITS</button>
+        <button type="button" role="tab" data-view="spend" aria-selected="false">SPEND</button>
+        <button type="button" role="tab" data-view="upcoming" aria-selected="false">UPCOMING</button>
+      </span>
+      <small id="units-count"></small>
+      <button type="button" class="fold" data-fold="right" title="Collapse (])" aria-label="Collapse the units panel">▸</button>
+    </h2>
+    <div id="roster"></div>
+    <div id="ledger"></div>
+    <div id="upcoming"></div>
+  </aside>
+
+  <section class="card panel" id="card" aria-label="Selected agent"></section>
+
+  <nav class="tabs" aria-label="Views">
+    <button type="button" data-tab="map">◇ Map</button>
+    <button type="button" data-tab="units">☰ Units</button>
+    <button type="button" data-tab="spend">$ Spend</button>
+    <button type="button" data-tab="upcoming">◷ Upcoming</button>
+    <button type="button" data-tab="feed">≋ Events</button>
+  </nav>
+</div>
+<div class="unit-menu" id="unit-menu" role="dialog" aria-label="Agent actions" hidden></div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

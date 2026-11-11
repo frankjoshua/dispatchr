@@ -1,0 +1,10 @@
+# The image is built from source; .env (a token) must never reach it.
+.env
+.env.*
+!.env.example
+.git
+.github
+node_modules
+dist
+docs
+*.log

@@ -1,0 +1,31 @@
+# The built site, from its base path (DISPATCHR_BASE, e.g. /map/) or from the root: a proxy in front
+# may or may not strip the base before passing a request on, and both must land on the same files.
+server {
+    listen 80;
+    root /usr/share/nginx/html;
+    server_tokens off;
+
+    rewrite ^${DISPATCHR_BASE}(.*)$ /$1 break;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy no-referrer always;
+    add_header X-Frame-Options DENY always;
+
+    # Hashed bundles never change (a miss is not cached); everything else (index.html, art) is revalidated.
+    location /assets/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        add_header X-Content-Type-Options nosniff always;
+        try_files $uri =404;
+    }
+    # The page may load only its own scripts, styles, art and fonts, and talk only to itself and to
+    # rostr (ROSTR_ORIGIN: VITE_ROSTR_URL at build time, empty when served beside rostr). The panels use
+    # inline style attributes; the bundled CSS embeds small fonts as data: URLs.
+    location / {
+        add_header Cache-Control "no-cache" always;
+        add_header X-Content-Type-Options nosniff always;
+        add_header Referrer-Policy no-referrer always;
+        add_header X-Frame-Options DENY always;
+        add_header Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' ${ROSTR_ORIGIN}; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" always;
+        try_files $uri $uri/ /index.html;
+    }
+}

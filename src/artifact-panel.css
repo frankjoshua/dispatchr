@@ -1,0 +1,191 @@
+.artifact-panel {
+  position: fixed;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  width: min(420px, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  box-sizing: border-box;
+  overflow: hidden;
+  color: var(--txt);
+  background: var(--panel-bg);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-m, 0);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+  font: 13px/1.4 var(--sans);
+}
+
+.artifact-panel[hidden],
+.artifact-panel [hidden] {
+  display: none;
+}
+
+.artifact-panel *,
+.artifact-panel *::before,
+.artifact-panel *::after {
+  box-sizing: border-box;
+}
+
+.artifact-panel header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--hdr-bg);
+}
+
+.artifact-panel-heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.artifact-panel h2 {
+  margin: 0;
+  color: var(--head);
+  font: 700 18px/1.3 var(--display);
+}
+
+.artifact-panel-heading p {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+  color: var(--soft);
+  font: 11px/1.5 var(--mono);
+}
+
+.artifact-panel-count {
+  color: var(--dim);
+}
+
+.artifact-panel button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--btn-bd);
+  border-radius: var(--r-s, 0);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-sh);
+  font: 600 12px/1.4 var(--mono);
+  cursor: pointer;
+}
+
+.artifact-panel button:hover {
+  background: var(--btn-bg-hi);
+  color: var(--btn-fg-hi);
+  box-shadow: var(--btn-sh-hi);
+}
+
+.artifact-panel button:active {
+  translate: 0 var(--press);
+  box-shadow: var(--btn-sh-press);
+}
+
+.artifact-panel .artifact-panel-close {
+  flex: none;
+  width: 44px;
+  padding: 0;
+  font: 24px/1 var(--sans);
+}
+
+.artifact-panel-body {
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--line) transparent;
+  padding: 8px;
+}
+
+.artifact-panel-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.artifact-panel-item {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s, 0);
+}
+
+.artifact-panel-item + .artifact-panel-item {
+  margin-top: 8px;
+}
+
+.artifact-panel-link {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px;
+  border-radius: var(--r-s, 0);
+  color: var(--txt);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.artifact-panel-link:hover {
+  background: var(--row-hi);
+}
+
+.artifact-panel-link strong {
+  font: 600 14px/1.4 var(--sans);
+}
+
+.artifact-panel-host {
+  color: var(--cy);
+  font: 11px/1.5 var(--mono);
+}
+
+.artifact-panel-url {
+  color: var(--soft);
+  font: 11px/1.5 var(--mono);
+}
+
+.artifact-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 6px;
+}
+
+.artifact-panel details {
+  min-width: 0;
+  margin-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
+.artifact-panel summary {
+  min-height: 44px;
+  padding: 13px 6px;
+  color: var(--soft);
+  font: 600 12px/1.5 var(--mono);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.artifact-panel pre {
+  max-width: 100%;
+  margin: 0;
+  padding: 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--soft);
+  font: 11px/1.6 var(--mono);
+  tab-size: 2;
+}
+
+.artifact-panel :is(button, a, summary):focus-visible {
+  outline: 2px solid var(--cy);
+  outline-offset: 2px;
+}
+
+.artifact-panel-empty {
+  margin: 0;
+  padding: 18px 10px;
+  color: var(--soft);
+}

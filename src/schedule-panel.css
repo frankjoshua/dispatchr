@@ -1,0 +1,241 @@
+.schedule-panel {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--line) transparent;
+  color: var(--txt);
+  background: var(--panel-bg);
+  font: 13px/1.5 var(--sans);
+}
+
+.schedule-panel *,
+.schedule-panel *::before,
+.schedule-panel *::after {
+  box-sizing: border-box;
+}
+
+.schedule-panel [hidden] {
+  display: none;
+}
+
+.schedule-panel-header {
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--hdr-bg);
+}
+
+.schedule-panel h2 {
+  margin: 0;
+  color: var(--head);
+  font: 700 18px/1.3 var(--display);
+}
+
+.schedule-agent-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+
+.schedule-agent-filter span {
+  flex: 1 1 160px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.schedule-panel button {
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--btn-bd);
+  border-radius: var(--r-s, 0);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--btn-sh);
+  font: 600 12px/1.4 var(--mono);
+  overflow-wrap: anywhere;
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.schedule-panel button:hover {
+  color: var(--btn-fg-hi);
+  background: var(--btn-bg-hi);
+  box-shadow: var(--btn-sh-hi);
+}
+
+.schedule-panel button:active {
+  translate: 0 var(--press);
+  box-shadow: var(--btn-sh-press);
+}
+
+.schedule-panel :is(button, summary):focus-visible {
+  outline: 2px solid var(--cy);
+  outline-offset: 2px;
+}
+
+.schedule-notice {
+  margin: 0;
+  padding: 16px 12px;
+  color: var(--soft);
+  overflow-wrap: anywhere;
+}
+
+.schedule-list {
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+}
+
+.schedule-row {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-s, 0);
+  overflow-wrap: anywhere;
+}
+
+.schedule-row + .schedule-row {
+  margin-top: 8px;
+}
+
+.schedule-row-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+}
+
+.schedule-row h3 {
+  flex: 1 1 140px;
+  min-width: 0;
+  margin: 0;
+  color: var(--head);
+  font: 600 15px/1.4 var(--sans);
+}
+
+.schedule-status {
+  color: var(--cy);
+  font: 600 11px/1.5 var(--mono);
+}
+
+.schedule-status[data-kind='running'] {
+  color: var(--ok);
+}
+
+.schedule-status[data-kind='due'],
+.schedule-status[data-kind='unconfirmed'] {
+  color: var(--warn);
+}
+
+.schedule-status[data-kind='paused'] {
+  color: var(--soft);
+}
+
+.schedule-row p {
+  margin: 6px 0;
+}
+
+.schedule-space,
+.schedule-source,
+.schedule-hidden-targets {
+  color: var(--soft);
+  font: 11px/1.6 var(--mono);
+}
+
+.schedule-purpose {
+  color: var(--txt);
+}
+
+.schedule-next {
+  display: grid;
+  gap: 3px;
+  padding: 8px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.schedule-next strong {
+  color: var(--soft);
+  font: 600 11px/1.5 var(--mono);
+}
+
+.schedule-next time {
+  color: var(--txt);
+}
+
+.schedule-countdown {
+  color: var(--cy);
+  font: 12px/1.5 var(--mono);
+}
+
+.schedule-targets-label {
+  color: var(--soft);
+  font: 600 11px/1.5 var(--mono);
+}
+
+.schedule-targets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.schedule-targets span {
+  max-width: 100%;
+  padding: 8px 0;
+  color: var(--soft);
+  font: 12px/1.5 var(--mono);
+}
+
+.schedule-row details {
+  min-width: 0;
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.schedule-panel summary {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 12px 4px;
+  color: var(--soft);
+  font: 600 12px/1.5 var(--mono);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.schedule-row details p {
+  color: var(--soft);
+  font: 11px/1.6 var(--mono);
+}
+
+.schedule-panel pre {
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: var(--soft);
+  font: 11px/1.6 var(--mono);
+  tab-size: 2;
+}
+
+.schedule-paused {
+  min-width: 0;
+  margin: 0 8px 8px;
+  border-top: 1px solid var(--line);
+}
+
+.schedule-paused > summary {
+  padding-inline: 12px;
+}
+
+.schedule-paused > .schedule-list {
+  padding-inline: 0;
+}

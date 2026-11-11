@@ -1,0 +1,20 @@
+# dispatchr as a static site: docker compose -f deploy/docker-compose.yml up -d --build
+# DISPATCHR_BASE: the path it is served under (e.g. /map/ on rostr's own tailnet address, so the browser
+#   reaches rostr's /v1 on the same origin; default /).
+# VITE_ROSTR_URL: rostr's address when dispatchr is served from another origin (rostr must then list
+#   that origin in ROSTR_CORS_ORIGINS); empty when it is served beside rostr.
+# DISPATCHR_PORT: the host port, on loopback only, for `tailscale serve` or a proxy on this host (8790).
+name: dispatchr
+services:
+  dispatchr:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args:
+        DISPATCHR_BASE: ${DISPATCHR_BASE:-/}
+        VITE_ROSTR_URL: ${VITE_ROSTR_URL:-}
+    image: dispatchr:local
+    container_name: dispatchr
+    restart: always
+    ports:
+      - "127.0.0.1:${DISPATCHR_PORT:-8790}:80"
