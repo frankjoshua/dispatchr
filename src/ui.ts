@@ -8,6 +8,8 @@ import { ledger, mountCounter, usageBlock } from './spend';
 import { facets, filter, filterActive, saveFilter } from './filter';
 import { badges, folds, sections, setSetting, settings, toggleFold, toggleSection } from './settings';
 import { mountBadgeEditor } from './badge-editor';
+import { mountModelCharacterEditor } from './model-character-editor';
+import { characterSettings } from './character-settings';
 import { mountArtifactPanel } from './artifact-panel';
 import { badgeLook, badgesFor, coalesce, iconName, type Badge } from './badges';
 import { iconSvg } from './icons';
@@ -18,7 +20,7 @@ import { byRecency, foldQuiet, isQuiet, type Item } from './presence';
 import { presence } from './presence-state';
 import { DIMMEST } from './recency';
 import { painterFor } from './painters';
-import { castFor } from './inference';
+import { castFor, characterIdFor } from './inference';
 import { THEMES, theme } from './theme';
 import type { Agent, ContactChannel, InferenceEffort, InferenceModel, RostrEvent } from './types';
 import { usage } from './usage';
@@ -40,10 +42,9 @@ const $ = <T extends HTMLElement = HTMLElement>(sel: string) => {
 };
 
 // The agent's character from the map's art, as the card's portrait (the head end of the sprite).
-const ART_KINDS = ['omp', 'claude', 'codex', 'pi'];
 function portrait(a: Agent): string {
-  const kind = ART_KINDS.includes(a.kind) ? a.kind : 'omp';
-  const src = `${import.meta.env.BASE_URL}art/${painterFor(theme.id)?.unitArt(kind, castFor(a)) ?? `n_robot_${kind}`}.webp`;
+  const cast = characterIdFor(castFor(a, characterSettings.rules));
+  const src = `${import.meta.env.BASE_URL}art/${painterFor(theme.id)?.unitArt(a.kind, cast) ?? `n_robot_${cast}`}.webp`;
   return `<img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 6%">`;
 }
 
@@ -882,6 +883,19 @@ export function mountUi(map: MapView, source: Pick<typeof api, 'contact' | 'me'>
   // Badge rules change the map, units list and open card at once.
   const badgeEditor = mountBadgeEditor(badgesDialog, () => { map.refresh(); renderRoster(); loopBar.render(); renderCard(); });
   $('#open-badges').addEventListener('click', () => { openSettings(false); badgeEditor.open(); });
+  const characterEditor = mountModelCharacterEditor($<HTMLDialogElement>('#model-characters-dialog'), () => {
+    map.refresh();
+    renderCard();
+  });
+  $('#open-model-characters').addEventListener('click', () => {
+    closeMenu();
+    artifactPanel.close();
+    badgeEditor.close();
+    openSearch(false);
+    openFilter(false);
+    openSettings(false);
+    characterEditor.open();
+  });
   const legend = mountLegend($('#legend'));
   $('#legend').addEventListener('click', () => {
     closeMenu();

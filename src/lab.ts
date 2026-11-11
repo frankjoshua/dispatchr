@@ -3,6 +3,7 @@ import type { Painter, Paint, Pt, UnitLook } from './painters';
 import { SHADE, aspect, sprite, stand } from './sprites';
 import type { Decor, District, Island, Rect, Slot, TeamBlock } from './world';
 import { boxOutline, columnOutline, type Iso } from './shapes';
+import { CHARACTERS, characterIdFor } from './inference';
 
 // The lab theme's painter: a clean research building. Each computer is a lab floor with a bioreactor
 // at its heart, each space a glass-walled wing, each team a taped-off bay, each agent an instrument
@@ -11,9 +12,9 @@ import { boxOutline, columnOutline, type Iso } from './shapes';
 // calls these for the parts that look different.
 
 const SLAB = 40;
-const KINDS = ['omp', 'claude', 'codex', 'pi'];
-/** The kind whose art a unit uses: its own, or omp's for kinds without art. */
-const artKind = (k: string) => (KINDS.includes(k) ? k : 'omp');
+const SCIENTIST_ART = Object.fromEntries(CHARACTERS.map(({ id }) => [id, {
+  work: `l_sci_${id}`, rest: `l_sci_${id}_rest`, alarm: `l_sci_${id}_alarm`,
+}]));
 const hash = (a: number, b: number, c: number) => { const x = Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453; return x - Math.floor(x); };
 const TAU = Math.PI * 2;
 
@@ -234,7 +235,7 @@ function bench(p: Paint, s: Slot, h: number, status: string, alive: boolean, sha
   const { ctx, iso, poly } = p;
   const t = p.t();
   const { gx, gy } = s;
-  const kind = artKind(s.agent.kind);
+  const kind = characterIdFor(s.agent.kind);
   const mat = [iso(gx + 0.12, gy + 0.12), iso(gx + 1.88, gy + 0.12), iso(gx + 1.88, gy + 1.88), iso(gx + 0.12, gy + 1.88)];
   poly(mat, p.ground('l_mat', gx, gy, 1.6) ?? (alive ? '#5d7189' : '#8b939c'));
   if (!alive) poly(mat, 'rgba(200,205,212,.45)');
@@ -439,9 +440,9 @@ const STAND_H = 54, REST_H = 46, ALARM_H = 60;
 function scientist(p: Paint, x: number, y: number, o: UnitLook) {
   const { ctx } = p;
   const t = p.t();
-  const k = artKind(o.kind);
+  const names = SCIENTIST_ART[characterIdFor(o.cast)];
   const resting = !o.working && !o.walking && !o.blocked && !o.dead;
-  const name = o.blocked && !o.dead ? `l_sci_${k}_alarm` : resting ? `l_sci_${k}_rest` : `l_sci_${k}`;
+  const name = o.blocked && !o.dead ? names.alarm : resting ? names.rest : names.work;
   const img = sprite(name, o.dead ? 'gray' : undefined);
   if (!img) { fallback(p, x, y, o); return; }
   if (o.blocked && !o.dead) {
@@ -588,10 +589,10 @@ export const painter: Painter = {
   sprites: [
     'l_reactor', ...MODULES, 'l_still', 'l_hotplate', 'l_beacon_red', 'l_beacon_green', 'l_intercom', 'l_drop', 'l_tubes', 'l_coatstand',
     'l_plant', 'l_cylinders', 'l_cart', 'l_microscope', 'l_boxes', 'l_bin', 'l_extinguisher', 'l_mouse', 'l_floor', 'l_mat',
-    ...KINDS.flatMap((k) => [`l_sci_${k}`, `l_sci_${k}_rest`, `l_sci_${k}_alarm`]),
+    ...Object.values(SCIENTIST_ART).flatMap((names) => [names.work, names.rest, names.alarm]),
   ],
   font: '"IBM Plex Sans", system-ui, sans-serif',
-  unitArt: (kind) => `l_sci_${artKind(kind)}`,
+  unitArt: (_kind, cast) => SCIENTIST_ART[characterIdFor(cast)].work,
   unitH: 52, unitW: 42,
   link: { color: '#1f9fc4', dash: [], lift: 0.9 },
   background, slab, bridge, field, team, core: reactor, place: bench, placeShape: benchShape, buzz: intercom, unit: scientist, carry, standIn: coatStand, coin: drop, decor, sky,

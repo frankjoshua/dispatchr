@@ -26,11 +26,20 @@ What every part of dispatchr shows and does. [GLOSSARY.md](../GLOSSARY.md) names
   and packed-away agents, and the other map marks. It uses the same art and model/effort definitions as
   the map. Scroll for the explanations; Close, Escape or a tap outside dismisses it and restores
   focus without changing the selected agent. Keyboard focus stays inside while it is open.
-- **Cubicles model and effort.** The existing human cast follows explicit, reported model-family
-  presets: Opus uses the orange-cardigan worker, Sonnet the purple-headset worker, Sol the blue-shirt
-  worker, and GPT/Codex the green-hoodie worker. Unrecognized or unreported models keep the runtime's
-  existing character; a provider or launcher is never treated as evidence of a model. Other themes
-  keep their existing cast.
+- **Model characters.** All four themes follow reported model-family presets: Opus uses the orange
+  identity, Sonnet purple, Sol blue, GPT/Codex green, and Fable burgundy and gold with silver hair
+  (a crowned burgundy robot in Neon city). Unrecognized or unreported models keep the runtime's
+  character; a provider or launcher is never treated as evidence of a model.
+  In **Settings → Model characters…**, preview all five graphics, choose a reported model ID to add
+  an exact rule, or enter a pattern with `*`. Choose its character and **Save and apply**: the map and
+  open unit card update together, in every theme. Rules ignore case; without `/` they match the final
+  model name, with `/` the whole provider-qualified ID. The first custom match wins; move rules up
+  or down to change priority. **Runtime fallback** overrides a model preset with the runtime's
+  character. **Reset to defaults** removes custom rules. Drafts do not change the map until applied.
+  Choices are stored in this browser only; storage failure is reported as applying in this tab only.
+  Another tab's saved change updates the map without replacing an open draft; **Reload saved rules**
+  resolves the conflict before another save. Unknown model observations remain unknown in Show info.
+- **Cubicles effort.** The chosen character keeps the same model identity at every effort tier.
 
   Working characters have increasingly focused desk-side and walking postures. Each cubicle also
   has a fixed four-slot **effort block**, visible while its character is on a trip or asleep:
@@ -265,7 +274,7 @@ What every part of dispatchr shows and does. [GLOSSARY.md](../GLOSSARY.md) names
 - **Settings (⚙ in the top bar)**, remembered per browser: the theme; *pane ids on the map* (off by
   default); *dim agents that have been quiet longest* (on; see Recency); *pack away agents quiet for
   over a week* (on; see Packed away); *hide characters of agents asleep over an hour* (on; see
-  Asleep); and *Badges…*, the badge rule editor (see Badges).
+  Asleep); *Badges…*, the badge rule editor (see Badges); and *Model characters…* (see Model characters).
 - **Themes.** *Neon city* is the look above.
   *Farm* turns each computer into a grassy farm with a red barn (its hayloft lamp is the heartbeat),
   each space into a fenced field with a sign, and each agent into a plot of crops tended by a
@@ -275,13 +284,13 @@ What every part of dispatchr shows and does. [GLOSSARY.md](../GLOSSARY.md) names
   is a mailbox with its flag up while attached. The panels turn to parchment and wood.
   *Lab* turns each computer into a bright lab floor with a bioreactor (its lid lamp is the heartbeat),
   each space into a glass-walled wing and each team into a bay. Each agent is a column of lab
-  instruments, stacking up while it works, and a scientist: a different look per kind,
+  instruments, stacking up while it works, and a scientist using the selected model character,
   sitting with coffee when idle or done, waving a red paddle under a red beacon when blocked. A missing
   agent's scientist is an empty lab coat on a stand. Reporting lines are tubing, Buzz is an intercom,
   and live spend flies in as golden drops.
   *Cubicles* turns each computer into an office floor with a print-and-coffee corner, each space into
   a department and each team into a pod. Each agent is a cubicle whose paperwork piles up while it
-  works, and an office worker: a different look per kind, jumping and waving under a red
+  works, and an office worker using the selected model character, jumping and waving under a red
   flag and warning light when blocked. A missing agent is an empty chair with a jacket over it. Buzz is
   a desk phone that rings while pending, and live spend flies in as banknotes. Red is kept for blocked:
   neither theme gives a space a red, pink or orange colour.
@@ -292,4 +301,4 @@ What every part of dispatchr shows and does. [GLOSSARY.md](../GLOSSARY.md) names
   unit card is a bottom sheet. The map pauses its drawing while a tab covers it.
 - **Keyboard.** Besides the shortcuts above, rows in the event log and in Spend take focus and fly to
   their agent on Enter or Space; focus stays where it was when a panel redraws; and while Settings,
-  Filter or Badges is open, `Esc` closes just that.
+  Filter, Badges or Model characters is open, `Esc` closes just that.

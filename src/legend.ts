@@ -1,8 +1,9 @@
 import { EFFORT_ART, WORKER_ART } from './cubicles';
-import { esc, kindOf, statusIcon, statusOf } from './format';
-import { CUBICLE_CASTS, EFFORT_TIERS } from './inference';
+import { esc, statusIcon, statusOf } from './format';
+import { CHARACTERS, MODEL_PRESETS, EFFORT_TIERS } from './inference';
+import { characterSettings } from './character-settings';
 import { painterFor } from './painters';
-import { pal, THEMES, theme } from './theme';
+import { THEMES, theme } from './theme';
 import './legend.css';
 
 const ART = `${import.meta.env.BASE_URL}art/`;
@@ -37,12 +38,14 @@ export function mountLegend(trigger: HTMLElement): { open(): void } {
     const office = theme.id === 'cubicles';
     const painter = painterFor(theme.id);
     context.textContent = `${THEMES.find((entry) => entry.id === theme.id)!.label} · characters, effort and activity`;
-    const cast = office
-      ? CUBICLE_CASTS.map((entry) => ({ label: entry.label, kind: entry.kind, detail: entry.appearance }))
-      : Object.keys(pal().kinds).map((kind) => ({ label: kindOf(kind).label, kind, detail: 'Runtime character' }));
-    const models = `<section aria-labelledby="legend-cast-title"><h3 id="legend-cast-title">${office ? 'Characters · model presets' : 'Characters · runtimes'}</h3><div class="legend-cast">${cast.map((entry) => `<figure>${image(painter?.unitArt(entry.kind, entry.kind) ?? `n_robot_${entry.kind}`)}<figcaption><strong>${esc(entry.label)}</strong><span>${esc(entry.detail)}</span></figcaption></figure>`).join('')}</div><p class="legend-note">${office
-      ? 'A recognized, reported model chooses its preset. If the model is unreported or has no preset, the character keeps its runtime’s appearance. A face alone is not a model guarantee; Show info has the exact reported identifier.'
-      : 'These faces identify the reported runtime, not the AI model. Model-specific characters and effort postures are available in Cubicles; Show info has the raw model and effort observations.'}</p></section>`;
+    const cast = CHARACTERS.map((entry) => ({
+      ...entry,
+      defaults: MODEL_PRESETS.filter((preset) => preset.kind === entry.id).map((preset) => preset.label).join(', '),
+    }));
+    const assignments = characterSettings.rules.length
+      ? `<p class="legend-note">Your custom assignments, first match wins:</p><ol>${characterSettings.rules.map((rule) => `<li><code>${esc(rule.pattern)}</code> → ${esc(rule.character === 'runtime' ? 'Reported runtime' : CHARACTERS.find((entry) => entry.id === rule.character)!.label)}</li>`).join('')}</ol>`
+      : '<p class="legend-note">No custom assignments. Choose Model characters… in Settings to override the defaults.</p>';
+    const models = `<section aria-labelledby="legend-cast-title"><h3 id="legend-cast-title">Characters · graphics and defaults</h3><div class="legend-cast">${cast.map((entry) => `<figure>${image(painter?.unitArt(entry.id, entry.id) ?? `n_robot_${entry.id}`)}<figcaption><strong>${esc(entry.label)}</strong><span>${office ? `${esc(entry.appearance)} · ` : ''}Default: ${esc(entry.defaults)}</span></figcaption></figure>`).join('')}</div><p class="legend-note">These five graphic identities have matching robots, farmers, scientists and office workers. Custom model assignments apply across every theme before the built-in model presets. Unreported or unmatched models keep the reported runtime’s character; an unknown runtime uses the blue character. An explicit Runtime rule bypasses model presets. A face is not a model guarantee: Show info has the exact reported identifier.</p>${assignments}</section>`;
     const efforts = office ? `<section aria-labelledby="legend-effort-title"><h3 id="legend-effort-title">Effort · posture + desk block</h3><p class="legend-note">Examples use the blue-shirt worker. The same tiers apply to the whole office cast.</p><table class="legend-effort"><thead><tr><th scope="col">Setting</th><th scope="col">Desk / trip</th><th scope="col">Desk block</th></tr></thead><tbody>${EFFORT_TIERS.map((entry) => `<tr><th scope="row"><strong>${esc(entry.label)}</strong>${entry.tier === 0 ? '<small>Medium, low, minimal, none/off and auto</small>' : ''}</th><td><div class="legend-poses"><figure>${image(WORKER_ART.omp.desk[entry.tier], `${entry.label}, desk-side posture`)}<figcaption>Desk</figcaption></figure><figure>${image(WORKER_ART.omp.walk[entry.tier], `${entry.label}, walking posture`)}<figcaption>Trip</figcaption></figure></div></td><td><div class="legend-block">${image(EFFORT_ART[entry.tier])}<span>${entry.tier + 1} ${entry.tier === 0 ? 'slot' : 'slots'}</span></div></td></tr>`).join('')}</tbody></table><p class="legend-note">The desk block stays when the character walks away or sleeps. Effort changes posture, not walking speed. Auto, unreported and unrecognized settings share the baseline look; unknown is still unknown in Show info.</p></section>` : '';
     const states = `<section aria-labelledby="legend-state-title"><h3 id="legend-state-title">What they’re doing</h3><dl class="legend-states">${STATES.map((entry) => `<div><dt><span class="legend-status" style="--s:${statusOf(entry.status).c}" aria-hidden="true">${statusIcon(entry.status)}</span>${esc(entry.label)}</dt><dd>${esc(entry.text)}</dd></div>`).join('')}</dl></section>`;
     body.innerHTML = `${models}${efforts}${states}<section aria-labelledby="legend-quiet-title"><h3 id="legend-quiet-title">When the character disappears</h3><dl class="legend-terms"><div><dt>Asleep</dt><dd>Idle or done and quiet for over an hour, with Hide asleep characters enabled: only its place remains. Selecting it does not wake it. In Cubicles, its effort block stays visible.</dd></div><div><dt>Packed away</dt><dd>Quiet for over a week, with Pack away enabled: off the map. Search still finds it and brings its place back.</dd></div></dl></section><section aria-labelledby="legend-marks-title"><h3 id="legend-marks-title">Other marks</h3><dl class="legend-terms"><div><dt>Small characters · helpers</dt><dd>Smaller figures beside a desk show advisors, subagents or other helper activity recorded in usage. Their appearance does not identify the main agent’s model or effort.</dd></div><div><dt>Highlight / brightness</dt><dd>The highlight is selection; brightness follows recent activity. Neither is an effort setting.</dd></div><div><dt>Stack height</dt><dd>Follows the current working run. Paperwork, buildings or crops are separate from the effort block.</dd></div><div><dt>Badges</dt><dd>Token, artifact and schedule marks above a place. Your badge rules choose their icon, color and urgency in Settings → Badges.</dd></div><div><dt>Megaphone chip</dt><dd>The agent’s Buzz identity, not its model or effort.</dd></div></dl></section>`;

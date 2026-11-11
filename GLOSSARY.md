@@ -32,6 +32,11 @@ The names for the parts of dispatchr, so people and code say the same thing. Use
 - **Helpers** — extra characters beside the place: the agent's subagents and advisors from the last
   hour or two.
 - **Status icon** — over the character: dots (working), ! (blocked), ✓ (done), z (idle), MISSING.
+- **Model character** — the graphic identity chosen from an agent's reported model: blue for Sol,
+  orange for Opus, purple for Sonnet, green for GPT/Codex, burgundy and gold for Fable by default.
+  Each has matching art in all four themes. **Settings → Model characters…** overrides these defaults
+  with ordered model-name or wildcard rules, saved in this browser. Unreported models keep their
+  runtime character; choosing a graphic does not change the model or its reported evidence.
 - **Effort tier** — Cubicles' four visual effort levels: medium or lower (auto included), high, extra
   high, max. Chosen from rostr's reported selector, or its reported level when no selector is known;
   never inferred from activity or spend. Missing evidence uses the baseline look, not a claimed setting.

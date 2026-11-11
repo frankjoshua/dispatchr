@@ -3,6 +3,7 @@ import type { Painter, Paint, Pt, UnitLook } from './painters';
 import { SHADE, aspect, sprite, stand } from './sprites';
 import type { Decor, District, Island, Rect, Slot, TeamBlock } from './world';
 import { boxOutline, columnOutline, type Iso } from './shapes';
+import { CHARACTERS, characterIdFor } from './inference';
 
 // The cubicles theme's painter: each computer an office floor (one storey of a building, carpet on
 // top, a window band round its edge), each space a department, each team a pod behind a low
@@ -12,10 +13,8 @@ import { boxOutline, columnOutline, type Iso } from './shapes';
 // look different.
 
 const SLAB = 40;
-const KINDS = ['omp', 'claude', 'codex', 'pi'];
-const kindOf = (k: string) => (KINDS.includes(k) ? k : 'omp');
 export const EFFORT_ART = [0, 1, 2, 3].map((tier) => `c_effort_${tier}`);
-export const WORKER_ART = Object.fromEntries(KINDS.map((kind) => [kind, {
+export const WORKER_ART = Object.fromEntries(CHARACTERS.map(({ id: kind }) => [kind, {
   rest: `c_worker_${kind}`, wave: `c_wave_${kind}`,
   desk: [0, 1, 2, 3].map((tier) => `c_pose_${kind}_desk_${tier}`),
   walk: [0, 1, 2, 3].map((tier) => `c_pose_${kind}_walk_${tier}`),
@@ -367,11 +366,11 @@ const WORKER_H = 54;
 /** The waving sprites have arms over the head: drawn taller so the body matches the standing one. */
 const WAVE_H = 58;
 
-/** An office worker, feet at (x, y): shirt, cardigan, hoodie or sweater in the agent kind's colour. */
+/** An office worker, feet at (x, y), in the viewer's selected character graphic. */
 function worker(p: Paint, x: number, y: number, o: UnitLook) {
   const { ctx } = p;
   const t = p.t();
-  const k = kindOf(o.cast), names = WORKER_ART[k];
+  const names = WORKER_ART[characterIdFor(o.cast)];
   const wave = o.blocked && !o.dead ? sprite(names.wave) : null;
   const posed = !o.dead && !o.blocked && (o.working || o.walking);
   const name = posed ? (o.walking ? names.walk : names.desk)[o.effort] : names.rest;
@@ -567,9 +566,9 @@ function carry(p: Paint, _s: Slot, x: number, y: number, flip: boolean) {
 export const painter: Painter = {
   sprites: ['c_copier', 'c_cubicle', 'c_desk', ...STACKS, 'c_tray', 'c_flag', 'c_phone', 'c_cash', 'c_folder', 'c_chair_jacket',
     'c_plant', 'c_cooler', 'c_vending', 'c_cat', 'c_bin', 'c_coatstand', 'c_carpet', 'c_tile',
-    ...KINDS.flatMap((k) => { const a = WORKER_ART[k]; return [a.rest, a.wave, ...a.desk, ...a.walk]; }), ...EFFORT_ART],
+    ...Object.values(WORKER_ART).flatMap((a) => [a.rest, a.wave, ...a.desk, ...a.walk]), ...EFFORT_ART],
   font: '"Rubik", "IBM Plex Sans", sans-serif',
-  unitArt: (_kind, cast) => WORKER_ART[kindOf(cast)].rest,
+  unitArt: (_kind, cast) => WORKER_ART[characterIdFor(cast)].rest,
   link: { color: '#34506f', dash: [2, 2.5], lift: 0.35 },
   unitH: 56, unitW: 52,
   background, slab, bridge, field, team, core: copier, place: cubicle, placeShape: cubicleShape, buzz: phone, unit: worker, carry, standIn: emptyChair, coin: cash, decor, sky,

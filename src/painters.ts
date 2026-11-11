@@ -28,7 +28,7 @@ export interface UnitLook {
   /** The agent kind's colours. */
   shirt: Kind;
   kind: string;
-  /** Existing cast selected from reported model identity, independently of the launcher. */
+  /** Viewer-selected character identity, independent of the reported runtime. */
   cast: string;
   effort: EffortTier;
   working: boolean;
@@ -48,7 +48,7 @@ export interface Painter {
   sprites: string[];
   /** Display face for map labels. */
   font: string;
-  /** The unit's portrait: themes may use the reported-model cast rather than the launcher kind. */
+  /** The unit's portrait, using the same resolved character identity as its map figure. */
   unitArt(kind: string, cast: string): string;
   /** Feet to the top of the unit's head, px at zoom 1: where the status icon sits and how tall a tap target is. */
   unitH: number;

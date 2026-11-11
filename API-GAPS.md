@@ -82,9 +82,9 @@ workaround in place. Each item is a proposal for rostr; dispatchr works around i
 
 ## 7. A viewer's settings cannot follow them across devices
 
-- **What:** dispatchr's settings (badge rules, theme, dimming, packing, sleepers) and the working loop's
-  order live in each browser's storage. rostr has nowhere to keep a person's
-  own preferences, and a viewer may only read.
+- **What:** dispatchr's settings (badge rules, model-character assignments, theme, dimming, packing,
+  sleepers) and the working loop's order live in each browser's storage. rostr has nowhere to keep
+  a person's own preferences, and a viewer may only read.
 - **Why:** people customize the game per person (which tokens show as badges, and how); doing it again
   on every device, and losing it with a cleared browser, defeats the point.
 - **Shape wanted:** per-principal, per-app preferences: an opaque JSON document rostr never interprets,
@@ -101,3 +101,5 @@ workaround in place. Each item is a proposal for rostr; dispatchr works around i
   the current document so it can merge or ask, never silently overwrite. Under a shared token every
   viewer shares one principal, so one document; per-person sign-in (Tailscale) gives each their own.
 - **Workaround:** settings stay in the browser; ⚙ → Badges… exports and imports badge rules as JSON.
+  Model-character assignments use the same browser-only fallback, explicitly approved for this
+  feature, until rostr provides per-principal preferences.

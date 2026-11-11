@@ -39,3 +39,16 @@ The studies use feet x=128, crop bottom y=305 and the minimum alpha-bound top ac
 removing their transparent foot gap. Disconnected generation specks are removed without trimming the
 character's edge, alpha values ≥250 are snapped to 255, and the final transparent WebPs are lossless
 and contain no metadata.
+
+## Fable character
+
+The Fable identity was generated with gpt-image-2 on 2026-11-11 using each theme's existing OMP
+character as its style and camera reference. It has burgundy and gold clothing or armor, silver hair
+and gold glasses for the human characters, and a broad crowned helmet for the robot. It is a distinct
+cast member, not a tint of Sol's blue character.
+
+Its fifteen sprites cover the Neon city robot, Farm farmer, Lab scientist's work/rest/alarm states,
+and Cubicles' resting/waving workers plus all eight desk/walk effort postures. Office poses share
+a foot-centered symmetric crop and scale, so a deeper lean does not enlarge the body. Disconnected
+generation specks are removed, alpha ≥250 is snapped to 255, and production WebPs are lossless with
+no metadata. Source atlases remain outside the repository.

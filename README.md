@@ -100,10 +100,12 @@ In short:
   carrying an alarm badge), or all of them; step round it and fast-forward to the next one waiting.
 - **Panels.** Computers and the event log on the left; the units list, Spend and Upcoming (rostr's
   schedule inventory) on the right; tabs on a phone.
-- **Themes.** Neon city, Farm, Lab and Cubicles: the same data, drawn by a different painter. In
-  Cubicles the character also shows which model family the agent runs and how hard it is set to think.
-- **Yours.** The theme, what is dimmed, packed away or hidden, a space and tag filter, and the badge
-  rules are your settings, kept in your browser.
+- **Themes.** Neon city, Farm, Lab and Cubicles: the same data, drawn by a different painter.
+- **Model characters.** Fable has a burgundy-and-gold character, distinct from Sol, in every theme.
+  In ⚙ → Model characters…, assign any of the five graphics to model names or wildcard patterns,
+  with picture previews. Cubicles also shows effort through the character's posture and desk block.
+- **Yours.** The theme, what is dimmed, packed away or hidden, a space and tag filter, badge rules and
+  model-character assignments are your settings, kept in your browser.
 
 ### Keys
 
@@ -124,7 +126,7 @@ Data → game rules → engine → presentation and panels. Rules never draw; th
 - **Data:** `src/api.ts` (GET calls, SSE over fetch) · `src/store.ts` (snapshot, event log, live
   stream) · `src/usage.ts` (current-session spend, live deltas) · `src/schedule-store.ts` and
   `src/schedule-types.ts` (schedule inventory) · `src/types.ts`, `src/data.ts` (API shapes and guards) ·
-  `src/settings.ts`, `src/filter.ts`, `src/loop-state.ts` (what the viewer chose, per browser).
+  `src/settings.ts`, `src/character-settings.ts`, `src/filter.ts`, `src/loop-state.ts` (what the viewer chose, per browser).
 - **Game rules** (pure, unit-tested): `src/presence.ts` and `src/recency.ts` (packing, sleep, light,
   ordering) · `src/runs.ts` and `src/stack.ts` (a run's working time and the height it gives) ·
   `src/teams.ts` (team nesting) · `src/badges.ts` (badge rules) · `src/attention.ts` and `src/loop.ts`
@@ -141,7 +143,7 @@ Data → game rules → engine → presentation and panels. Rules never draw; th
   in `map.ts`) · `src/icons.ts` (badge icons) · `src/format.ts` (colours by meaning, event wording).
 - **Panels:** `src/ui.ts` (top bar, lists, unit menu and card) · `src/loop-bar.ts` · `src/spend.ts` ·
   `src/schedule-panel.ts` (Upcoming) · `src/artifact-panel.ts` · `src/badge-editor.ts` ·
-  `src/legend.ts` · `src/tabs.ts` (shared and own tabs for links).
+  `src/legend.ts` · `src/model-character-editor.ts` · `src/tabs.ts` (shared and own tabs for links).
 - `src/main.ts` plugs the HTTP adapter into everything that reads through it; `vite.config.ts` is
   the dev proxy; `deploy/` the container.
 

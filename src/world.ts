@@ -3,6 +3,7 @@ import { store } from './store';
 import type { Team } from './teams';
 import type { Agent, RNode } from './types';
 import { castFor, effortTier, type EffortTier } from './inference';
+import { characterSettings } from './character-settings';
 
 // Where things stand on the isometric grid (units: tiles). A computer is an island; on it each space
 // is a district; in a district each agent has a slot: a building with its unit standing in front.
@@ -142,7 +143,7 @@ function gridBox(agents: Agent[]): Box | null {
         const seed = hash(agent.id);
         const slot: Slot = {
           agent, gx, gy, ux: gx + 1, uy: gy + 3, seed: seed * 100,
-          cast: castFor(agent), effort: effortTier(agent.inference),
+          cast: castFor(agent, characterSettings.rules), effort: effortTier(agent.inference),
           district: into.district, island: into.island, route: [],
         };
         into.district.slots.push(slot);

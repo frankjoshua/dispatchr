@@ -17,6 +17,7 @@ import { buildWorld, type Decor, type District, type Island, type Rect, type Slo
 import { coreName, NAMES_ZOOM, oneLine, plateRank, plateShown, wrapName } from './nameplate';
 import { Effects } from './effects';
 import { STACK_K, STACK_MIN, stackHeight } from './stack';
+import { CHARACTERS, characterIdFor } from './inference';
 
 // The isometric map on a 2D canvas, in the look of design/play: islands for computers, districts for
 // spaces, a building and a unit per agent. Everything that moves either shows a status rostr reported or
@@ -83,6 +84,7 @@ export interface MapTap { x: number; y: number; t: number; shift: boolean; actio
 const ALIVE = new Set(['working', 'idle', 'blocked', 'done', 'unknown']);
 /** The neon robot as drawn, in world px: feet to head, and across its arms. */
 const UNIT_H = 50, UNIT_W = 40;
+const ROBOT_ART = Object.fromEntries(CHARACTERS.map(({ id }) => [id, `n_robot_${id}`]));
 /** The most of each effect kept queued (effects.ts). */
 const EFFECTS_MAX = 256;
 // The phone layout of style.css (tabs, unit card as a bottom sheet); keep the two queries the same.
@@ -104,7 +106,7 @@ export function createMap(host: HTMLElement, onTap: (id: string | null, at: MapT
   const ctx = maybeCtx;
   // What a painted theme's painter borrows (painters.ts); the helpers below are hoisted function declarations.
   const paint: Paint = { ctx, t: () => T, iso, poly, box, ground: groundPattern };
-  preload(['n_core', 'n_tree', 'n_lamp', 'n_drone', 'n_floor', 'n_wall', 'n_robot_omp', 'n_robot_claude', 'n_robot_codex', 'n_robot_pi']);
+  preload(['n_core', 'n_tree', 'n_lamp', 'n_drone', 'n_floor', 'n_wall', ...Object.values(ROBOT_ART)]);
   preload(art()?.sprites ?? []);
   theme.onChange(() => preload(art()?.sprites ?? []));
 
@@ -1069,7 +1071,7 @@ export function createMap(host: HTMLElement, onTap: (id: string | null, at: MapT
     poly([{ x: hx, y: cy }, { x: hx + r, y: cy - r / 2 }, { x: hx + r, y: cy + r / 2 }, { x: hx, y: cy + r }], rgba(c, 0.4));
   }
 
-  const robotName = (s: Slot) => `n_robot_${['omp', 'claude', 'codex', 'pi'].includes(s.agent.kind) ? s.agent.kind : 'omp'}`;
+  const robotName = (s: Slot) => ROBOT_ART[characterIdFor(s.cast)];
 
   // ─── working units walk between their building and their computer's core (the base)
 

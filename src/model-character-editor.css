@@ -1,0 +1,83 @@
+.model-characters-dialog {
+  width: min(820px, calc(100vw - 24px));
+  max-width: none;
+  max-height: calc(100dvh - 24px);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  color: var(--txt);
+  background: var(--top-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-s, 0);
+  box-shadow: 0 20px 70px #0008;
+  font: 13px/1.5 var(--sans);
+}
+.model-characters-dialog[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.model-characters-dialog::backdrop { background: #030812b8; }
+.model-characters-dialog .character-header {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 14px 18px; border-bottom: 1px solid var(--line);
+}
+.model-characters-dialog h2, .model-characters-dialog h3, .model-characters-dialog p { margin: 0; }
+.model-characters-dialog h2 { font: 700 20px var(--sans); color: var(--head); }
+.model-characters-dialog h3 { font: 600 14px var(--sans); color: var(--head); margin-bottom: 10px; }
+.model-characters-dialog .character-content { overflow-y: auto; overscroll-behavior: contain; min-height: 0; padding: 16px 18px; display: grid; gap: 22px; }
+.model-characters-dialog .character-content > p { max-width: 75ch; }
+.model-characters-dialog button, .model-characters-dialog input, .model-characters-dialog select {
+  min-height: 40px; min-width: 0; max-width: 100%; padding: 7px 10px;
+  color: var(--txt); background: var(--top-2); border: 1px solid var(--line);
+  border-radius: var(--r-s, 0); font: inherit;
+}
+.model-characters-dialog button { cursor: pointer; }
+.model-characters-dialog button:disabled { opacity: .45; cursor: default; }
+.model-characters-dialog :is(button, input, select, summary):focus-visible { outline: 2px solid var(--cy); outline-offset: 2px; }
+.model-characters-dialog input[aria-invalid='true'] { border-color: var(--red, #f85149); }
+.model-characters-dialog .character-gallery { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.model-characters-dialog figure { margin: 0; text-align: center; border: 1px solid var(--line); padding: 8px 4px; border-radius: var(--r-s, 0); }
+.model-characters-dialog figure img { display: block; width: 100%; height: 96px; object-fit: contain; margin-bottom: 5px; }
+.model-characters-dialog figcaption { font-size: 11px; overflow-wrap: anywhere; }
+.model-characters-dialog .character-rules { display: grid; gap: 10px; margin-bottom: 10px; }
+.model-characters-dialog .character-rule {
+  display: grid; grid-template-columns: 20px minmax(0, 1fr) minmax(0, 1fr) 58px auto; gap: 8px;
+  align-items: center; padding: 10px; border: 1px solid var(--line); border-radius: var(--r-s, 0);
+}
+.model-characters-dialog .character-rule label { min-width: 0; display: grid; gap: 5px; }
+.model-characters-dialog .character-rule label > span, .model-characters-dialog .character-priority { color: var(--dim); font-size: 11px; }
+.model-characters-dialog .character-pattern input { width: 100%; font-family: var(--mono); }
+.model-characters-dialog .character-choice select { width: 100%; }
+.model-characters-dialog .character-preview { display: grid; place-items: center; width: 58px; height: 72px; }
+.model-characters-dialog .character-preview img { width: 100%; height: 100%; object-fit: contain; }
+.model-characters-dialog .character-runtime { font: 11px/1.4 var(--mono); text-align: center; color: var(--dim); }
+.model-characters-dialog .character-order { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.model-characters-dialog .character-order button { padding: 3px 8px; }
+.model-characters-dialog .character-order [data-action='remove'] { grid-column: 1 / -1; font-size: 11px; }
+.model-characters-dialog .character-note { margin-top: 8px; font-size: 11px; color: var(--dim); }
+.model-characters-dialog .character-observed { display: flex; gap: 8px; }
+.model-characters-dialog .character-observed select { flex: 1; width: 0; font-family: var(--mono); }
+.model-characters-dialog summary { cursor: pointer; color: var(--head); padding: 5px 0; }
+.model-characters-dialog .character-defaults { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.model-characters-dialog .character-defaults > div { display: flex; gap: 8px; align-items: center; flex: 1 1 180px; }
+.model-characters-dialog .character-defaults img { width: 50px; height: 65px; object-fit: contain; }
+.model-characters-dialog .character-defaults small { display: block; color: var(--dim); }
+.model-characters-dialog .character-footer { padding: 12px 18px; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+.model-characters-dialog .character-status { font-size: 12px; overflow-wrap: anywhere; }
+.model-characters-dialog .character-status.error { color: var(--red, #f85149); }
+.model-characters-dialog .character-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.model-characters-dialog .character-apply { border-color: var(--cy); color: var(--head); font-weight: 600; }
+@media (max-width: 620px) {
+  .model-characters-dialog .character-header, .model-characters-dialog .character-content, .model-characters-dialog .character-footer { padding: 12px; }
+  .model-characters-dialog .character-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .model-characters-dialog figure img { height: 76px; }
+  .model-characters-dialog .character-rule { grid-template-columns: 18px minmax(0, 1fr) 58px; }
+  .model-characters-dialog .character-priority { grid-column: 1; grid-row: 1 / 4; align-self: start; }
+  .model-characters-dialog .character-pattern { grid-column: 2 / 4; }
+  .model-characters-dialog .character-choice { grid-column: 2; }
+  .model-characters-dialog .character-preview { grid-column: 3; grid-row: 2 / 4; }
+  .model-characters-dialog .character-order { grid-column: 2; display: flex; flex-wrap: wrap; }
+  .model-characters-dialog .character-order button { min-width: 40px; }
+  .model-characters-dialog .character-observed { flex-wrap: wrap; }
+  .model-characters-dialog .character-observed select { flex-basis: 100%; width: 100%; }
+  .model-characters-dialog .character-actions { justify-content: stretch; }
+  .model-characters-dialog .character-actions button { flex: 1 1 45%; }
+  .model-characters-dialog .character-apply { flex-basis: 100% !important; }
+}

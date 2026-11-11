@@ -3,6 +3,7 @@ import type { Painter, Paint, Pt, UnitLook } from './painters';
 import { SHADE, aspect, sprite, stand } from './sprites';
 import type { Decor, District, Island, Rect, Slot, TeamBlock } from './world';
 import { boxOutline, type Iso } from './shapes';
+import { CHARACTERS, characterIdFor } from './inference';
 
 // The farm theme's painter: a meadow, each computer a farm with a barn, each space a fenced field
 // with a sign, each agent a plot of crops (the Stack: as tall as its current run has been working)
@@ -10,6 +11,7 @@ import { boxOutline, type Iso } from './shapes';
 // parts that look different.
 
 const SLAB = 40;
+const FARMER_ART = Object.fromEntries(CHARACTERS.map(({ id }) => [id, `f_farmer_${id}`]));
 const hash = (a: number, b: number, c: number) => { const x = Math.sin(a * 127.1 + b * 311.7 + c * 74.7) * 43758.5453; return x - Math.floor(x); };
 
 // Screen-space meadow details, placed once.
@@ -340,7 +342,7 @@ const FARMER_H = 54;
 function farmer(p: Paint, x: number, y: number, o: UnitLook) {
   const { ctx } = p;
   const t = p.t();
-  const img = sprite(`f_farmer_${['omp', 'claude', 'codex', 'pi'].includes(o.kind) ? o.kind : 'omp'}`, o.dead ? 'gray' : undefined);
+  const img = sprite(FARMER_ART[characterIdFor(o.cast)], o.dead ? 'gray' : undefined);
   if (img) {
     // Working: rocking into each hoe stroke, kicking up dirt; blocked: hopping for attention.
     const rot = o.walking ? o.sway : o.working ? Math.sin(t * 7 + o.seed) * 0.08 : 0;
@@ -582,10 +584,10 @@ function carry(p: Paint, s: Slot, x: number, y: number, flip: boolean) {
 
 export const painter: Painter = {
   sprites: ['f_barn', 'f_corn', 'f_sunflower', 'f_wheat', 'f_sprout', 'f_withered', 'f_tree', 'f_hay', 'f_chicken', 'f_mailbox',
-    'f_coin', 'f_grass', 'f_soil', 'f_scarecrow', 'f_farmer_omp', 'f_farmer_claude', 'f_farmer_codex', 'f_farmer_pi'],
+    'f_coin', 'f_grass', 'f_soil', 'f_scarecrow', ...Object.values(FARMER_ART)],
   font: '"Fredoka", "IBM Plex Sans", sans-serif',
   unitH: FARMER_H, unitW: 40,
-  unitArt: (kind) => `f_farmer_${['omp', 'claude', 'codex', 'pi'].includes(kind) ? kind : 'omp'}`,
+  unitArt: (_kind, cast) => FARMER_ART[characterIdFor(cast)],
   link: { color: '#fff1c4', dash: [5, 4], lift: 0.5 },
   background, slab, bridge, field, team, core: barn, place: crop, placeShape: cropShape, buzz: mailbox, unit: farmer, carry, standIn: scarecrow, coin, decor, sky,
 };
